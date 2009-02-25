@@ -115,6 +115,11 @@
                         $fromSinu[6] = $fromSinu[7];
                         array_pop($fromSinu);
                     }
+                    // Bug - multiple nume
+                    if(count($fromSinu) > 7) {
+                        $fromSinu[1] .= " ".$fromSinu[2];
+                        unset($fromSinu[2]);
+                    } 
                     $fromSinuKeys = array('status', 'nume', 'prenume', 'facultatea', 'catedra', 'cod_an', 'grupa');
                     if(array_combine($fromSinuKeys, $fromSinu) != false) {
                         $fromSinu = array_combine($fromSinuKeys, $fromSinu);
