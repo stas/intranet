@@ -1,7 +1,7 @@
 <?php
 class DATABASE_CONFIG {
 
-        var  = array(
+        var $default = array(
 		'driver' => 'mysql',
 		'persistent' => false,
 		'host' => 'localhost',
@@ -11,7 +11,7 @@ class DATABASE_CONFIG {
 		'encoding' => 'utf8'
         );
         
-        var  = array (
+        var $ldap  = array (
 		'datasource' => 'ldap',
 		'host' => '',                
 		'port' => 389,                        
