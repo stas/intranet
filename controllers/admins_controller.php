@@ -90,11 +90,13 @@
                     $tries++;
                 }
                 $sinuResult = $cleaner->stripTags($httpData, 'body', 'html', 'meta', 'head','br');
-                
-                if($sinuResult = array_filter(explode('\n',preg_replace('/\s\s+/', '\n', $sinuResult))) && $sinuResult[9] != 'OK')
-                {
+		$sinuResultOK = array_filter(explode('\n',preg_replace('/\s\s+/', '\n', $sinuResult)));
+		
+		if(!empty($sinuResult) && !empty($sinuResultOK)  && $sinuResultOK[9] != 'OK')
+		{
                     $this->Admin->diffUpdate_alumni($fromLdap['LdapUser']);
                     $result .= "A fost actualizat utilizatorul ".$fromLdap['LdapUser']['displayname']." ID: ".$fromLdap['LdapUser']['uidnumber']." UID: ".$fromLdap['LdapUser']['uid']."\n";
+                    $sinuResultOK = null;
                     $sinuResult = null;
                     
                 }
