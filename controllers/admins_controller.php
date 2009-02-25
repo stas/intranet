@@ -115,6 +115,12 @@
                         $fromSinu[6] = $fromSinu[7];
                         array_pop($fromSinu);
                     }
+		   // Bug - An V (AU rom)
+		   if($fromSinu[5] == 'An V' && $fromSinu[6] == '(AU rom)') {
+			$fromSinu[5] .= " ".$fromSinu[6];
+			$fromSinu[6] = $fromSinu[7];
+			array_pop($fromSinu);
+		    }
                     // Bug - multiple nume
                     if(count($fromSinu) > 7) {
                         $fromSinu[1] .= " ".$fromSinu[2];
