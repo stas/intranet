@@ -13,7 +13,7 @@ class DATABASE_CONFIG {
         
         var $ldap  = array (
 		'datasource' => 'ldap',
-		'host' => '',                
+		'host' => 'yourhost',                
 		'port' => 389,                        
 		'basedn' => '',    
 		'login' => '', 
