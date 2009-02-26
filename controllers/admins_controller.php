@@ -91,12 +91,10 @@
                 }
                 $sinuResult = $cleaner->stripTags($httpData, 'body', 'html', 'meta', 'head','br');
 		$sinuResultOK = array_filter(explode('\n',preg_replace('/\s\s+/', '\n', $sinuResult)));
-		
-		if(!empty($sinuResult) && !empty($sinuResultOK)  && $sinuResultOK[9] != 'OK')
-		{
+                if(!empty($sinuResult) && !empty($sinuResultOK)  && $sinuResultOK[9] != 'OK')
+                {
                     $this->Admin->diffUpdate_alumni($fromLdap['LdapUser']);
                     $result .= "A fost actualizat utilizatorul ".$fromLdap['LdapUser']['displayname']." ID: ".$fromLdap['LdapUser']['uidnumber']." UID: ".$fromLdap['LdapUser']['uid']."\n";
-                    $sinuResultOK = null;
                     $sinuResult = null;
                     
                 }
@@ -115,24 +113,53 @@
                         $fromSinu[6] = $fromSinu[7];
                         array_pop($fromSinu);
                     }
-		   // Bug - An V (AU rom)
-		   if($fromSinu[5] == 'An V' && $fromSinu[6] == '(AU rom)') {
-			$fromSinu[5] .= " ".$fromSinu[6];
-			$fromSinu[6] = $fromSinu[7];
-			array_pop($fromSinu);
+		    
+		    // Bug - An V (AU rom)
+                    if($fromSinu[5] == 'An V' && $fromSinu[6] == '(AU rom)') {
+                        $fromSinu[5] .= " ".$fromSinu[6];
+                        $fromSinu[6] = $fromSinu[7];
+                        array_pop($fromSinu);
+                    }
+		    
+		    // Bug - Design Industrial (lic)
+		    if($fromSinu[4] == 'Design Industrial' && $fromSinu[5] == '(lic)') {
+			$fromSinu[4] .= " ".$fromSinu[5];
+			unset($fromSinu[5]);
 		    }
-                    // Bug - multiple nume
-                    if(count($fromSinu) > 7) {
-                        $fromSinu[1] .= " ".$fromSinu[2];
-                        unset($fromSinu[2]);
-                    } 
+		    
+		    // Bug - Ingineria mediului industrial
+		    if($fromSinu[4] == 'Ingineria mediului' && $fromSinu[5] == 'industrial') {
+			$fromSinu[4] .= " ".$fromSinu[5];
+			unset($fromSinu[5]);
+		    }
+
+		    // Bug - An V (IEI-rom)
+		    if($fromSinu[5] == 'An V' && $fromSinu[6] == '(IEI-rom)') {
+			$fromSinu[5] .= " ".$fromSinu[6];
+			unset($fromSinu[6]);
+		    }
+		    
+		    // Bug - Ingineria procesarii materialelor (ld)
+		    if($fromSinu[4] == 'Ingineria' && $fromSinu[5] == 'procesarii materialelor (ld)') {
+			$fromSinu[4] .= " ".$fromSinu[5];
+			unset($fromSinu[5]);
+		    }
+
+		    // Bug - multiple nume
+		    if(count($fromSinu) > 7) {
+			$fromSinu[1] .= " ".$fromSinu[2];
+			unset($fromSinu[2]);
+		    }
+		
+		    //pr($fromSinu);
                     $fromSinuKeys = array('status', 'nume', 'prenume', 'facultatea', 'catedra', 'cod_an', 'grupa');
                     if(array_combine($fromSinuKeys, $fromSinu) != false) {
                         $fromSinu = array_combine($fromSinuKeys, $fromSinu);
                         
                         if($this->Admin->diffUpdate($fromLdap['LdapUser'], $fromSinu))
                         {
-                            $result .= "A fost actualizat utilizatorul ".$fromSinu['nume']." ".$fromSinu['prenume']." ID: ".$fromLdap['LdapUser']['uidnumber']." UID: ".$fromLdap['LdapUser']['uid']."\n";
+                            $result .= "A fost actualizat utilizatorul ".$fromSinu['nume']." ".$fromSinu['prenume']." ID: ".$fromLdap['LdapUser']['uidnumber']." UID: ".$fromLdap['LdapUser']['uid'];
+			    $result .= ' | <a href="/admins/updateldap/'.$fromLdap['LdapUser']['uidnumber'].'" target="_blank">Reactualizare</a>'."\n";
                             //pr($this->Admin->getByUid($fromLdap['LdapUser']['uidnumber']));
                         }
                     }
@@ -144,6 +171,7 @@
             else
                 $this->redirect(array('controller' => 'admins', 'action' => 'index'));
         
+	$this->set('result', $result);
         return $result;
         }
         
